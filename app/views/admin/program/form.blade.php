@@ -6,7 +6,7 @@
 
 <fieldset>
     <div class="form-group has-{{ option('style') }}">
-        {{ Form::label('title', '标题:', ['class'=>'col-lg-1 control-label']) }}
+        {{ Form::label('title', '标题:', ['class'=>'col-lg-2 control-label']) }}
         <div class="col-lg-5">
             {{ Form::text('title', isset($model) ? $model->title : '', ['class' => 'form-control']) }}
             <span class="material-input"></span>
@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="form-group has-{{ option('style') }}">
-            {{ Form::label('author', '作者:', ['class'=>'col-lg-1 control-label']) }}
+            {{ Form::label('author', '作者:', ['class'=>'col-lg-2 control-label']) }}
             <div class="col-lg-2">
                 {{ Form::text('author', isset($model) ? $model->author : Auth::user()->nickname, ['class' => 'form-control']) }}
                 <span class="material-input"></span>
@@ -22,7 +22,7 @@
             </div>
         </div>
     <div class="form-group has-{{ option('style') }}">
-        {{ Form::label('type', '分类:', ['class'=>'col-lg-1 control-label']) }}
+        {{ Form::label('type', '分类:', ['class'=>'col-lg-2 control-label']) }}
         <div class="col-sm-2">
             <select class="form-control" id="type" name="type">
                 <option value="season" @if(isset($model) && $model->album->type=='season') selected @endif>四季节目</option>
@@ -32,7 +32,7 @@
         <div class="col-sm-3">
             <select class="form-control" name="album_id">
                 @foreach(isset($model) ? $albums[$model->album->type] : $albums['season'] as $album)
-                <option value="{{ $album['id'] }}" @if(isset($model) && $model->album_id=$album['id']) selected @endif>{{ $album['name'] }}</option>
+                <option value="{{ $album['id'] }}" @if(isset($model) && $model->album_id==$album['id']) selected @endif>{{ $album['name'] }}</option>
                 @endforeach
             </select>
             <span class="material-input"></span>
@@ -40,25 +40,75 @@
         </div>
     </div>
     <div class="form-group has-{{ option('style') }}">
-        {{ Form::label('cover', '封面图:', ['class'=>'col-lg-1 control-label']) }}
+        {{ Form::label('user_id', '所属主播:', ['class'=>'col-lg-2 control-label']) }}
         <div class="col-lg-3">
+            <select class="form-control" name="user_id">
+                @foreach(User::all() as $user)
+                @if(isset($model))
+                    <option value="{{ $user->id }}" @if($model->user_id == $user->id) selected @endif>{{ $user->nickname }}</option>
+                @else
+                    <option value="{{ $user->id }}" @if(Auth::check()&&Auth::user()->id==$user->id) selected @endif>{{ $user->nickname }}</option>
+                @endif
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="form-group has-{{ option('style') }}">
+        {{ Form::label('cover', '封面图:', ['class'=>'col-lg-2 control-label']) }}
+        <div class="col-lg-6">
             <div class="form-control-wrapper fileinput {{ isset($model)&&!empty($model->cover) ? 'hidden':''}}">
                 <input type="text" readonly="" class="form-control empty"/>
                 <input type="file" name="cover" id="audioFile" multiple="" class=""/>
-                <div class="floating-label">选择图片...</div><span class="material-input"></span>
+                <div class="floating-label">选择图片...</div><span class="material-input" width="100%"></span>
                 <span class="material-input"></span>
             </div>
             @if(isset($model) && !empty($model->cover))
             <div class="input-group" role="alert">
                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">取消</span></button>
-                <img src="{{ $model->cover }}" class="img-thumbnail"/>
+                <img src="{{ $model->cover }}" class="img-thumbnail img-responsive"/>
             </div>
             @endif
             {{ $errors->first('cover', '<div class="text-danger">:message</div>') }}
         </div>
     </div>
     <div class="form-group has-{{ option('style') }}">
-        {{ Form::label('audio', '声音:', ['class'=>'col-lg-1 control-label']) }}
+        {{ Form::label('thumbnail', '缩略图:', ['class'=>'col-lg-2 control-label']) }}
+        <div class="col-lg-3">
+            <div class="form-control-wrapper fileinput {{ isset($model)&&!empty($model->thumbnail) ? 'hidden':''}}">
+                <input type="text" readonly="" class="form-control empty"/>
+                <input type="file" name="thumbnail" id="audioFile" multiple="" class=""/>
+                <div class="floating-label">选择图片...</div><span class="material-input"></span>
+                <span class="material-input"></span>
+            </div>
+            @if(isset($model) && !empty($model->thumbnail))
+            <div class="input-group" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">取消</span></button>
+                <img src="{{ $model->thumbnail }}" class="img-thumbnail img-responsive" width="100%"/>
+            </div>
+            @endif
+            {{ $errors->first('thumbnail', '<div class="text-danger">:message</div>') }}
+        </div>
+    </div>
+    <div class="form-group has-{{ option('style') }}">
+        {{ Form::label('background', '背景图:', ['class'=>'col-lg-2 control-label']) }}
+        <div class="col-lg-8">
+            <div class="form-control-wrapper fileinput {{ isset($model)&&!empty($model->background) ? 'hidden':''}}">
+                <input type="text" readonly="" class="form-control empty"/>
+                <input type="file" name="background" id="audioFile" multiple="" class=""/>
+                <div class="floating-label">选择图片...</div><span class="material-input"></span>
+                <span class="material-input"></span>
+            </div>
+            @if(isset($model) && !empty($model->background))
+            <div class="input-group" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">取消</span></button>
+                <img src="{{ $model->background }}" class="img-thumbnail img-responsive" width="100%"/>
+            </div>
+            @endif
+            {{ $errors->first('background', '<div class="text-danger">:message</div>') }}
+        </div>
+    </div>
+    <div class="form-group has-{{ option('style') }}">
+        {{ Form::label('audio', '声音:', ['class'=>'col-lg-2 control-label']) }}
         <div class="col-lg-3">
             <div class="form-control-wrapper fileinput {{ isset($model)&&!empty($model->audio->src) ? 'hidden':''}}">
                 <input type="text" readonly="" class="form-control empty"/>
@@ -72,7 +122,7 @@
                     <span aria-hidden="true">&times;</span><span class="sr-only">取消</span>
                 </button>
                 <audio controls>
-                  <source src="{{ $model->audio->src }}" type="audio/mpeg">
+                  <source src="{{ $model->audio->url }}" type="audio/mpeg">
                   您的浏览器版本太低，不支持预览音频
                 </audio>
             </div>
@@ -83,8 +133,8 @@
     </div>
 
     <div class="form-group has-{{ option('style') }}">
-        {{ Form::label('article', '节目搞:', ['class'=>'col-lg-1 control-label']) }}
-        <div class="col-lg-11">
+        {{ Form::label('article', '节目稿:', ['class'=>'col-lg-2 control-label']) }}
+        <div class="col-lg-10">
             {{ Form::textarea('article', isset($model) ? $model->article : '', ['class' => 'form-control', 'id' => 'umeditor', 'style'=>'height:300px;']) }}
         </div>
         {{ $errors->first('article', '<div class="text-danger">:message</div>') }}
@@ -92,7 +142,7 @@
     <div class="form-group">
         <div class="col-lg-8 col-lg-offset-4">
             <button class="btn btn-lg btn-default withripple" onclick="window.history.go(-1)">取消<div class="ripple-wrapper"></div></button>
-            {{ Form::submit(isset($model) ? '更新' : '保存', ['class' => 'btn btn-lg btn-'.option('style')]) }}
+            {{ Form::submit(isset($model) ? ($model->visible ? '更新' : '通过&发布') : '保存', ['class' => 'btn btn-lg btn-'.option('style')]) }}
         </div>
     </div>
 </fieldset>
@@ -128,7 +178,6 @@
 
         resultContainer.addClass('hidden');
         uploadContainer.removeClass('hidden');
-        console.log(uploadContainer);
     })
     @endif
 

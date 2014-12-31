@@ -60,6 +60,7 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/pingpong/menus/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/vendor/pingpong/presenters/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/vendor/pingpong/trusty/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/controllers" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

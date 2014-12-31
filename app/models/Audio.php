@@ -18,6 +18,8 @@
  * @method static \Illuminate\Database\Query\Builder|\Audio whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Audio whereUpdatedAt($value)
  * @property-read mixed $src
+ * @property-read mixed $url
+ * @property-read \Program $program
  */
 class Audio extends \Eloquent {
 	protected $fillable = [];
@@ -26,6 +28,16 @@ class Audio extends \Eloquent {
 
     public function getSrcAttribute(){
 //        return 'http://radio.sky31.com/'.$this->path;
-        return url('api/audio', $this->id);
+        return url('api/audio', $this->id.".mp3");
+    }
+    public function getUrlAttribute(){
+        return url($this->attributes['path']);
+    }
+    public function delete(){
+        File::delete('public/'.$this->path);
+        return parent::delete();
+    }
+    public function program(){
+        return $this->belongsTo('Program', 'program_id', 'id');
     }
 }

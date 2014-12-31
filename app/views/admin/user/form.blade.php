@@ -5,6 +5,24 @@
 @endif
 <fieldset>
     <div class="form-group has-{{ option('style') }}">
+        {{ Form::label('avatar', '头像:', ['class'=>'col-lg-2 control-label']) }}
+        <div class="col-lg-3">
+            <div class="form-control-wrapper fileinput {{ isset($model)&&!empty($model->avatar) ? 'hidden':''}}">
+                <input type="text" readonly="" class="form-control empty"/>
+                <input type="file" name="avatar" id="audioFile" multiple="" class=""/>
+                <div class="floating-label">选择图片...</div><span class="material-input"></span>
+                <span class="material-input"></span>
+            </div>
+            @if(isset($model) && !empty($model->avatar))
+            <div class="input-group" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">取消</span></button>
+                <img src="{{ $model->avatar }}" class="img-thumbnail"/>
+            </div>
+            @endif
+            {{ $errors->first('avatar', '<div class="text-danger">:message</div>') }}
+        </div>
+    </div>
+    <div class="form-group has-{{ option('style') }}">
         {{ Form::label('nickname', '昵称:', ['class'=>'col-lg-2 control-label']) }}
         <div class="col-lg-5">
             {{ Form::text('nickname', isset($model) ? $model->nickname : '', ['class' => 'form-control']) }}
@@ -55,3 +73,15 @@
     </div>
 </fieldset>
 {{ Form::close() }}
+<script type="text/javascript">
+ @if(isset($model))
+    $('.close').click(function(){
+        var resultContainer = $(this).parent();
+        var uploadContainer = resultContainer.parent().children("div:first-child");
+
+        resultContainer.addClass('hidden');
+        uploadContainer.removeClass('hidden');
+        console.log(uploadContainer);
+    })
+    @endif
+</script>

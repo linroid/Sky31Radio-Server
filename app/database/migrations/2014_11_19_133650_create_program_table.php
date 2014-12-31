@@ -26,7 +26,7 @@ class CreateProgramTable extends Migration {
             //作者
             $table->string('author')->nullable();
             //节目附加文章
-            $table->string('article')->nullable();
+            $table->text('article')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');

@@ -12,11 +12,12 @@
 	{{ HTML::style('css/material-wfont.min.css') }}
 	{{ HTML::style('css/style.css') }}
 	@yield('style')
+    {{ HTML::script('js/jquery.min.js') }}
 </head>
 <body>
 	@include('admin::partials.flashes')
 	
-	@if(Auth::check() && Auth::user()->is('admin'))
+	@if(Auth::check())
 		@include('admin::partials.header')
 	@endif
 
@@ -26,12 +27,11 @@
 
 	<footer class="container">
 	<hr/>
-		Copyright &COPY; 翼工坊 {{ date('Y') }}
+		Copyright &COPY; 翼工坊 {{ date('Y') }}  |  <a href="http://linroid.com">@linroid</a>
 	</footer>
 	@if(App::isLocal())
 	    {{ var_dump(DB::getQueryLog()) }}
     @endif
-    {{ HTML::script('js/jquery.min.js') }}
     {{ HTML::script('js/bootstrap.min.js') }}
     {{ HTML::script('js/ripples.min.js') }}
     {{ HTML::script('js/material.min.js') }}

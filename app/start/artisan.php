@@ -10,5 +10,6 @@
 | the console gets access to each of the command object instances.
 |
 */
-Artisan::add(new DownloadOld());
+Artisan::add(new DownloadList());
+Artisan::add(new DownloadAudio());
 

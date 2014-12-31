@@ -1,5 +1,6 @@
 <?php
 
+//$_SERVER['HTTP_HOST'] = 'newradio.sky31.com';
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $uri = urldecode($uri);

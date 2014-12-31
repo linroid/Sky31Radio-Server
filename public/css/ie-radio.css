@@ -1,0 +1,49 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors Your Name (you@example.org)
+ * @date    2014-12-27 13:55:11
+ * @version $Id$
+ */
+
+
+#siderbar {
+    width: 80px;
+    min-height: 100%;
+    position: absolute;
+    right: 0;
+    background-repeat: no-repeat;
+    z-index: 999999;
+    background-color: #000;
+    margin-left: 20px;
+    text-align: center;
+    list-style: none;
+}
+
+#pageslide {
+    /* These styles MUST be included. Do not change. */
+    display: none;
+    position: fixed;
+    top: 0;
+    min-height: 100%;
+    z-index: 999999;
+    font-family: "微软雅黑";
+    /* Specify the width of your pageslide here */
+    width: 320px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color:#fff;
+}
+
+
+/*播放器下部分控制*/
+.music-player .controls {
+  text-align: center;
+  width: 100%;
+  height: 90px;
+  padding-top: 20px;
+  position: absolute;
+  bottom: 0;
+  background-color: #000;
+}

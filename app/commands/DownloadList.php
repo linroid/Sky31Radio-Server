@@ -4,14 +4,14 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class DownloadOld extends Command {
+class DownloadList extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'download-old';
+	protected $name = 'download:list';
 
 	/**
 	 * The console command description.
@@ -23,7 +23,7 @@ class DownloadOld extends Command {
     /**
      * Create a new command instance.
      *
-     * @return \DownloadOld
+     * @return \DownloadList
      */
 	public function __construct()
 	{
@@ -44,27 +44,40 @@ class DownloadOld extends Command {
          * @var SimpleXMLElement $xml;
          */
         $xml = $response->body;
-        foreach($xml->album as $album_node){
+        $arr = array();
+        foreach($xml->album as $album_node) {
+            array_push($arr, $album_node);
+        }
+//        foreach($xml->album as $album_node){
+        for( $i=count($arr)-1; $i>=0; $i--){
+            $album_node = $arr[$i];
             $album_attributes = $album_node->attributes();
             /**
              * @var Album $album
              */
             $album = Album::whereName($album_attributes->name)->first();
-            foreach($album_node->song as $song_node){
+            $song_count = $album_node->count();
+//            foreach($album_node->song as $song_node){
+            for($song_index=0; $song_index<$song_count; $song_index++){
+                $song_node = $album_node->song[$song_index];
+                if(empty($song_node) ||empty($album)){
+                    continue;
+                }
                 $song_attributes = $song_node->attributes();
-
                 $program = new Program();
                 $program->user_id = 1;
                 $program->title = $song_attributes->name;
                 $program->author = null;
                 $program->article = null;
-                $album->programs()->save($program);
+                $program->album_id = $album->id;
+                $program->save();
 
                 $audio = new Audio();
                 $audio->duration = $song_attributes->duration;
                 $audio->path = $song_attributes->downloadSource;
                 $audio->size = 0;
-                $program->audio()->save($audio);
+                $audio->program_id = $program->id;
+                $audio->save();
             }
         }
 	}

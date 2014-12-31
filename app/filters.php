@@ -21,7 +21,13 @@ App::after(function($request, $response)
 {
 	//
 });
-
+Route::filter('admin', function(){
+    echo phpinfo();
+    exit;
+    if(!Auth::check()||!Auth::user()->is('admin')){
+        App::abort(403);
+    }
+});
 /*
 |--------------------------------------------------------------------------
 | Authentication Filters

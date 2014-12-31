@@ -22,10 +22,12 @@
             <td>{{ $album->created_at}}</td>
                 <td class="text-center">
                     <a href="{{ route('admin.album.show', $album->id) }}">所有节目</a>
+                    @if(Auth::user()->is('admin'))
                     &middot;
                     <a href="{{ route('admin.album.edit', $album->id) }}">编辑</a>
                     &middot;
                     @include('admin::partials.modal', ['data' => $album, 'name' => 'album'])
+                    @endif
                 </td>
             </tr>
             @endforeach

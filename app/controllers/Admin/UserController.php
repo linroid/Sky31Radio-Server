@@ -1,9 +1,11 @@
 <?php
 namespace Admin;
 
+use File;
 use Input;
 use Redirect;
 use Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use User;
 use Validator;
 
@@ -46,16 +48,33 @@ class UserController extends BaseAdmin {
             'nickname' => 'required',
             'password' => 'required|min:6|confirmed',
             'email' => 'required|email|unique:users',
-            'role'  => 'required|in:admin,anchor,normal'
+            'role'  => 'required|in:admin,anchor,normal',
+            'avatar' => 'mimes:jpeg,bmp,png|max:1024',//1M
         );
         $messages = array(
-
+            'avatar.mimes'       => '允许上传的封面图片格式::mimes',
+            'avatar.max'         => '导图文件大小应小于 :maxkb'
         );
         $validator = Validator::make($data, $rules, $messages);
         if($validator->fails()){
             return Redirect::back()->withErrors($validator)->withInput();
         }
         $user = new User($data);
+        if(Input::hasFile('avatar')){
+            /**
+             * @var UploadedFile $avatar_file
+             */
+            $avatar_file = $data['avatar'];
+
+            $avatar_path = 'uploads/avatar/'.date('Y/m/d/',time());
+            $file_path = 'public/'.$avatar_path;
+            if(!File::exists($file_path)){
+                File::makeDirectory($file_path, 0777, true, true);
+            }
+            $filename = str_random(5).'_'.$avatar_file->getClientOriginalName();
+            $avatar_file->move($file_path, $filename);
+            $user->avatar = $avatar_path.$filename;
+        }
         $user->save();
         return $this->redirect('user')->withFlashMessage("添加用户 [{$user->nickname}] 成功");
     }
@@ -104,14 +123,35 @@ class UserController extends BaseAdmin {
             'nickname' => 'required',
             'password' => 'min:6|confirmed',
             'email' => 'required|email',
-            'role'  => 'required|in:admin,anchor,normal'
+            'role'  => 'required|in:admin,anchor,normal',
+            'avatar' => 'mimes:jpeg,bmp,png|max:1024',//1M
         );
         $messages = array(
-
+            'avatar.mimes'       => '允许上传的封面图片格式::mimes',
+            'avatar.max'         => '导图文件大小应小于 :maxkb'
         );
         $validator = Validator::make($data, $rules, $messages);
         if($validator->fails()){
             return Redirect::back()->withErrors($validator)->withInput();
+        }
+        if(Input::hasFile('avatar')){
+//            /**
+//             * @var UploadedFile $avatar_file
+//             */
+//            $avatar_file = $data['avatar'];
+//
+//            $avatar_path = 'uploads/avatar/'.date('Y/m/d/',time());
+//            $file_path = 'public/'.$avatar_path;
+//            if(!File::exists($file_path)){
+//                File::makeDirectory($file_path, 0777, true, true);
+//            }
+            if(!empty($user->avatar)){
+                File::delete('public/'.$user->avatar);
+            }
+//            $filename = str_random(5).'_'.$avatar_file->getClientOriginalName();
+//            $avatar_file->move($file_path, $filename);
+//            $user->avatar = $avatar_path.$filename;
+            $user->avatar = $this->savePicture('avatar');
         }
         if(empty($data['password'])){
             unset($data['password']);
@@ -138,8 +178,21 @@ class UserController extends BaseAdmin {
         }
 
         return Redirect::back()->withFlashMessage('删除用户成功');
+    }
+    private function savePicture($name){
+        /**
+         * @var UploadedFile $cover_file
+         */
+        $cover_file = Input::file($name);
 
-
+        $picture_path = 'uploads/'.$name.'/'.date('Y/m/d/',time());
+        $file_path = app_path().'/../public/'.$picture_path;
+        if(!File::exists($file_path)){
+            File::makeDirectory($file_path, 0777, true, true);
+        }
+        $filename = str_random(5).'_'.$cover_file->getClientOriginalName();
+        $cover_file->move($file_path, $filename);
+        return $picture_path.$filename;
     }
 
 }

@@ -24,9 +24,19 @@
  * @property-read \Audio $audio
  * @method static \Illuminate\Database\Query\Builder|\Program whereCover($value)
  * @property-read \Album $album
+ * @property boolean $visible
+ * @method static \Illuminate\Database\Query\Builder|\Program whereVisible($value)
+ * @property-read \PlayLog $totalPlayRelation
+ * @property-read mixed $total_play
+ * @property string $thumbnail
+ * @method static \Illuminate\Database\Query\Builder|\Program whereThumbnail($value)
+ * @property string $background
+ * @method static \Illuminate\Database\Query\Builder|\Program whereBackground($value)
  */
 class Program extends \Eloquent {
-	protected $fillable = ['title', 'article', 'album_id', 'author'];
+	protected $fillable = ['title', 'article', 'album_id', 'author', 'user_id'];
+    protected $appends = ['total_play'];
+    public $hidden = ['totalPlayRelation', 'visible', 'article'];
 
     public function audio(){
         return $this->hasOne('Audio', 'program_id', 'id');
@@ -40,4 +50,28 @@ class Program extends \Eloquent {
     public function getCoverAttribute(){
         return empty($this->attributes['cover']) ? null : url($this->attributes['cover']);
     }
+    public function getThumbnailAttribute(){
+        return empty($this->attributes['thumbnail']) ? null : url($this->attributes['thumbnail']);
+    }
+    public function getBackgroundAttribute(){
+        return empty($this->attributes['background']) ? null : url($this->attributes['background']);
+    }
+    public function delete(){
+        File::delete('public/'.$this->cover);
+        return $this->audio->delete() && parent::delete();
+    }
+//    public function
+
+    public function totalPlayRelation(){
+        return $this->hasOne('PlayLog', 'program_id', 'id')
+            ->selectRaw('program_id, count(*) as count')
+            ->groupBy('program_id');
+    }
+    public function getTotalPlayAttribute()
+    {
+        return intval($this->totalPlayRelation['count']);
+    }
+//    public function getArticleAttribute(){
+//        return htmlspecialchars_decode($this->attributes['article']);
+//    }
 }

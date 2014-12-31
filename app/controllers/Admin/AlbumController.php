@@ -2,10 +2,13 @@
 namespace Admin;
 
 use Album;
+use Auth;
+use File;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Input;
 use Redirect;
 use Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use View;
 
 class AlbumController extends BaseAdmin {
@@ -49,14 +52,35 @@ class AlbumController extends BaseAdmin {
 		$data = Input::all();
         $rules = array(
             'name'=>'required|min:1',
-            'type'=>'required|in:season,activity'
+            'type'=>'required|in:season,activity',
+            'cover' => 'mimes:jpeg,bmp,png|max:1024',//1M
         );
-        $messages = [];
+        $messages = [
+            'cover.mimes'       => '允许上传的封面图片格式::mimes',
+            'cover.max'         => '导图文件大小应小于 :maxkb'
+        ];
         $validator = \Validator::make($data, $rules, $messages);
         if($validator->fails()){
             return Redirect::back()->withErrors($validator)->withInput();
         }
         $album = new Album($data);
+
+        if(Input::hasFile('cover')){
+            /**
+             * @var UploadedFile $cover_file
+             */
+            $cover_file = $data['cover'];
+
+            $cover_path = 'uploads/album_cover/'.date('Y/m/d/',time());
+            $file_path = 'public/'.$cover_path;
+            if(!File::exists($file_path)){
+                File::makeDirectory($file_path, 0777, true, true);
+            }
+            $filename = str_random(5).'_'.$cover_file->getClientOriginalName();
+            $cover_file->move($file_path, $filename);
+            $album->cover = $cover_path.$filename;
+        }
+
         $album->save();
         return $this->redirect('album')->withFlashMessage("创建专题 [{$album->name}] 成功");
 
@@ -76,7 +100,14 @@ class AlbumController extends BaseAdmin {
              * @var \Album $album;
              */
             $album = \Album::findOrFail($id);
-            $programs = $album->programs()->with('user')->orderBy('created_at', 'desc')->paginate(10);
+            $model = $album->programs()
+                ->with('user')
+                ->with('totalPlayRelation')
+                ->orderBy('created_at', 'desc');
+            if(Auth::check() && !Auth::user()->is('admin')){
+                $model->whereUserId(Auth::user()->id);
+            }
+            $programs = $model->paginate(10);
             return View::make('admin::album.show')
                 ->with('album', $album)
                 ->with('programs',$programs)
@@ -117,12 +148,31 @@ class AlbumController extends BaseAdmin {
         $data = Input::all();
         $rules = array(
             'name'=>'required|min:1',
-            'type'=>'required|in:season,activity'
+            'type'=>'required|in:season,activity',
+            'cover' => 'mimes:jpeg,bmp,png|max:1024',//1M
         );
-        $messages = [];
+        $messages = [
+            'cover.mimes'       => '允许上传的封面图片格式::mimes',
+            'cover.max'         => '导图文件大小应小于 :maxkb'
+        ];
         $validator = \Validator::make($data, $rules, $messages);
         if($validator->fails()){
             return Redirect::back()->withErrors($validator)->withInput()->with('album', $album);
+        }
+        if(Input::hasFile('cover')){
+            /**
+             * @var UploadedFile $cover_file
+             */
+            $cover_file = $data['cover'];
+
+            $cover_path = 'uploads/album_cover/'.date('Y/m/d/',time());
+            $file_path = 'public/'.$cover_path;
+            if(!File::exists($file_path)){
+                File::makeDirectory($file_path, 0777, true, true);
+            }
+            $filename = str_random(5).'_'.$cover_file->getClientOriginalName();
+            $cover_file->move($file_path, $filename);
+            $album->cover = $cover_path.$filename;
         }
         $album->fill($data);
         $album->save();

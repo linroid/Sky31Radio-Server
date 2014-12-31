@@ -14,6 +14,8 @@
  * @method static \Illuminate\Database\Query\Builder|\Album whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Album whereUpdatedAt($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\Program[] $programs
+ * @property string $cover
+ * @method static \Illuminate\Database\Query\Builder|\Album whereCover($value)
  */
 class Album extends \Eloquent {
 	protected $fillable = ['name', 'type'];
@@ -25,6 +27,12 @@ class Album extends \Eloquent {
         return Album::whereType('activity');
     }
     public function programs(){
-        return $this->hasMany('Program', 'album_id', 'id');
+        return $this->hasMany('Program', 'album_id', 'id')
+            ->whereVisible(1)
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function getCoverAttribute(){
+        return empty($this->attributes['cover']) ? null : url($this->attributes['cover']);
     }
 }

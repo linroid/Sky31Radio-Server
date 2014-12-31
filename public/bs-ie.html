@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<link rel="stylesheet" href="css/css-ie/main.css" type="text/css" media="screen, projection" /> <!-- main stylesheet -->
+<link rel="stylesheet" type="text/css" media="all" href="css/css-ie/tipsy.css" /> <!-- Tipsy implementation -->
+<!--[if lt IE 9]>
+	<link rel="stylesheet" type="text/css" href="css/css/ie8.css" />
+<![endif]-->
+<script type="text/javascript" src="js/scripts/jquery-1.7.2.min.js"></script> <!-- uiToTop implementation -->
+<script type="text/javascript" src="js/scripts/custom-scripts.js"></script>
+<script type="text/javascript" src="js/scripts/jquery.tipsy.js"></script> <!-- Tipsy -->
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	universalPreloader();
+});
+
+$(window).load(function(){
+
+	//remove Universal Preloader
+	universalPreloaderRemove();
+	rotate();
+    dogRun();
+	dogTalk();
+	//Tipsy implementation
+	$('.with-tooltip').tipsy({gravity: $.fn.tipsy.autoNS});
+});
+</script>
+<title>Sorry！！！ </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<body>
+<!-- Universal preloader -->
+<div id="universal-preloader">
+    <div class="preloader">
+        <img src="images/images-ie/universal-preloader.gif" alt="universal-preloader" class="universal-preloader-preloader" />
+    </div>
+</div>
+<!-- Universal preloader -->
+<div id="wrapper">
+<!-- 404 graphic -->
+	<div class="graphic"></div>
+<!-- 404 graphic -->
+<!-- Not found text -->
+	<div class="not-found-text">
+    	<h1 class="not-found-text">Your browser version is too low, sorry!</h1>
+    </div>
+<!-- Not found text -->
+<!-- top menu -->
+<div class="top-menu">
+	<a href="http://www.sky31.com" class="with-tooltip" title="进入三翼校园">首页</a> | <a target="_blank" href="http://wpa.qq.com/msgrd?V=1&Uin=1485896141&Site=四季电台&Menu=yes">客服QQ</a> | <a href="http://radio.sky31.com" class="with-tooltip" title="返回旧版">返回旧版</a>
+</div>
+<!-- top menu -->
+<div class="dog-wrapper">
+<!-- dog running -->
+	<div class="dog"></div>
+<!-- dog running -->
+<!-- dog bubble talking -->
+	<div class="dog-bubble">
+    </div>
+    <!-- The dog bubble rotates these -->
+    <div class="bubble-options">
+    	<p class="dog-bubble">
+        	系统检测到您正在使用的是IE8或更低版本的浏览器。。。
+        </p>
+    	<p class="dog-bubble">
+	        <br />
+        	So，请遵循以下建议。。
+        </p>
+        <p class="dog-bubble">
+        	<br />
+        	1、升级或者更换更高级的浏览器，比如<a href="http://dlsw.baidu.com/sw-search-sp/soft/9d/14744/ChromeStandaloneSetup.1418195695.exe">谷歌</a>
+                    <a href="http://se.360.cn/">360</a>
+                    <a href="http://ie.sogou.com/">搜狗</a>
+        </p>
+        <p class="dog-bubble">
+        	2、您没有使用IE？那就把您所使用的浏览器切换成极速模式吧！
+        </p>
+        <p class="dog-bubble">
+        	<br />
+        	3、当然，您还可以点击右方进入我们的旧版网站收听节目。
+        </p>
+        <p class="dog-bubble">
+        	<br />
+        	还有问题，请联系我们的客服人员。
+        </p>
+        <p class="dog-bubble">
+        	谢谢您对四季电台的支持！@_@
+        </p>
+    </div>
+    <!-- The dog bubble rotates these -->
+<!-- dog bubble talking -->
+</div>
+<!-- planet at the bottom -->
+	<div class="planet"></div>
+<!-- planet at the bottom -->
+</div>
+</body>
+</html>

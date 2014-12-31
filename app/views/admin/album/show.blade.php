@@ -9,7 +9,7 @@
         <thead>
             <th>编号</th>
             <th>标题</th>
-            <th>播放量</th>
+            <th>总播放量</th>
             <th>作者</th>
             <th>创建用户</th>
             <th>节目稿?</th>
@@ -22,15 +22,17 @@
                 {{--<td>{{ link_to_route('admin.program.show', $program->id, $program->id) }}</td>--}}
                 <td>{{ $program->id }}</td>
                 <td>{{ $program->title }}</td>
-                <td>待统计</td>
+                <td>{{ $program->total_play }}</td>
                 <td>{{ $program->author }}</td>
                 <td>{{ $program->user->nickname }}</td>
                 <td>{{ empty($program->article) ? '没有' : '有'}}</td>
                 <td>{{ $program->created_at }}</td>
                 <td class="text-center">
                     <a href="{{ route('admin.program.edit', $program->id) }}">编辑</a>
+                    @if(Auth::user()->is('admin'))
                     &middot;
                     @include('admin::partials.modal', ['data' => $program, 'name' => 'program'])
+                    @endif
                 </td>
             </tr>
             @endforeach

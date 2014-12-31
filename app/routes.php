@@ -11,13 +11,14 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
+header('Access-Control-Allow-Origin: *');
+Route::group(['prefix'=>'api', 'namespace'=>'Api'], function() {
+    Route::resource('anchor', 'AnchorController');
+    Route::resource('program', 'ProgramController');
 });
 Route::controller('/api', 'ApiController');
 Route::group(['prefix'=>'admin', 'namespace'=>'Admin'], function(){
-
+    //
     Route::get('/logout',['as'=>'admin.logout', 'uses'=>'AdminController@logout']);
     Route::get('/', ['as'=>'admin.home', 'uses'=>'AdminController@index']);
     Route::get('/setting', ['as'=>'admin.setting', 'uses'=>'AdminController@setting']);
@@ -28,7 +29,11 @@ Route::group(['prefix'=>'admin', 'namespace'=>'Admin'], function(){
     Route::resource('program', 'ProgramController');
     Route::resource('audio', 'AudioController');
     Route::resource('comment', 'CommentController');
-
+    Route::resource('contribution', 'ContributionController');
+    Route::resource('lucky', 'LuckyController');
     Route::controller('/', 'AdminController');
     Route::get('/comment', ['as'=>'admin.comment', 'uses'=>'CommentController@index']);
+    Route::when('admin/album/*', 'admin', ['post','put', 'delete']);
+    Route::when('admin/lucky/*', 'admin', ['get']);
 });
+Route::controller('/', 'HomeController');

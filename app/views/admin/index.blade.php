@@ -14,10 +14,10 @@
 					<td>节目</td>
 					<td>{{ Program::count() }}</td>
 				</tr>
-				<tr>
-				    <td>评论</td>
-				    <td>123</td>
-				</tr>
+				{{--<tr>--}}
+				    {{--<td>评论</td>--}}
+				    {{--<td>123</td>--}}
+				{{--</tr>--}}
 				<tr>
                     <td>管理员</td>
                     <td>{{ User::administrators()->count() }}</td>

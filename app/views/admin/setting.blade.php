@@ -23,6 +23,7 @@
                         <option class="text-danger" value="danger" @if(option('style')=='danger') selected @endif>红色</option>
                         <option class="text-warning" value="warning" @if(option('style')=='warning') selected @endif>橙色</option>
                         <option class="text-info" value="info" @if(option('style')=='info') selected @endif>天蓝色</option>
+                        <option class="text-black" value="black" @if(option('style')=='black') selected @endif>黑色</option>
                     </select>
                 </div>
             </div>
